@@ -12,12 +12,12 @@ fn main() {
 
     let mut data = data.lines();
 
-    data.next(); // irrelevant comment
+    data.next();
 
     let node_number: usize = data
         .next()
         .unwrap()
-        .split(' ')
+        .split_whitespace()
         .last()
         .unwrap()
         .parse::<usize>()
@@ -28,7 +28,7 @@ fn main() {
     let mut matrix: Vec<Vec<i32>> = vec![vec![INF; node_number]; node_number];
 
     for line in data {
-        let mut line_split = line.split(' ').collect::<Vec<&str>>();
+        let mut line_split = line.split_whitespace().collect::<Vec<&str>>();
         let nr = line_split[0].parse::<usize>().unwrap();
         if line_split.len() > 1 {
             let adj_list = line_split.split_off(2);
