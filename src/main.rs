@@ -1,6 +1,6 @@
 use std::env;
 
-const INF: i32 = 3000000;
+const INF: i32 = 3_000_000;
 
 fn main() {
     let mut args = env::args();
@@ -8,26 +8,25 @@ fn main() {
 
     let path = args.next().unwrap();
 
-    let data = std::fs::read_to_string(path).expect("tried reading file");
+    let input = std::fs::read_to_string(path).expect("tried reading file");
 
-    let mut data = data.lines();
+    let mut input_lines = input.lines();
 
-    data.next();
+    input_lines.next();
 
-    let node_number: usize = data
-        .next()
-        .unwrap()
+    let line = input_lines.next().unwrap();
+    let number_of_nodes: usize = line
         .split_whitespace()
         .last()
         .unwrap()
         .parse::<usize>()
         .unwrap();
 
-    println!("n = {node_number}");
+    println!("n = {number_of_nodes}");
 
-    let mut matrix: Vec<Vec<i32>> = vec![vec![INF; node_number]; node_number];
+    let mut matrix: Vec<Vec<i32>> = vec![vec![INF; number_of_nodes]; number_of_nodes];
 
-    for line in data {
+    for line in input_lines {
         let mut line_split = line.split_whitespace().collect::<Vec<&str>>();
         let nr = line_split[0].parse::<usize>().unwrap();
         if line_split.len() > 1 {
@@ -41,13 +40,13 @@ fn main() {
         }
     }
 
-    (0..node_number).for_each(|i| {
-        matrix[i][i] = 0_i32;
+    (0..number_of_nodes).for_each(|i| {
+        matrix[i][i] = 0;
     });
 
-    for k in 0..node_number {
-        for i in 0..node_number {
-            for j in 0..node_number {
+    for k in 0..number_of_nodes {
+        for i in 0..number_of_nodes {
+            for j in 0..number_of_nodes {
                 if matrix[i][k] != INF && matrix[k][j] != INF {
                     matrix[i][j] = matrix[i][j].min(matrix[i][k] + matrix[k][j]);
                 }
@@ -55,9 +54,9 @@ fn main() {
         }
     }
 
-    (0..node_number).for_each(|x| {
+    (0..number_of_nodes).for_each(|x| {
         let mut string = String::default();
-        for y in 0..node_number {
+        for y in 0..number_of_nodes {
             let weight = matrix[x][y];
             if weight != INF {
                 string.push_str(&format!("{y}w{weight} "));
