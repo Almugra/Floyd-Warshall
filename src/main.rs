@@ -31,8 +31,8 @@ fn main() {
         let nr = line_split[0].parse::<usize>().unwrap();
         if line_split.len() > 1 {
             let adj_list = line_split.split_off(2);
-            for x in adj_list.iter() {
-                let nr_weight = x.split('w').collect::<Vec<&str>>();
+            for adj in adj_list.iter() {
+                let nr_weight = adj.split('w').collect::<Vec<&str>>();
                 let node = nr_weight[0].parse::<usize>().unwrap();
                 let weight = nr_weight[1].parse::<i32>().unwrap();
                 matrix[nr][node] = weight;
