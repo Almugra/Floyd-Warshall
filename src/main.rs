@@ -1,14 +1,16 @@
-use std::env;
+use std::io::Write;
+use std::{env, time::SystemTime};
 
 const INF: i32 = 3_000_000;
 
 fn main() {
+    let now = SystemTime::now();
     let mut args = env::args();
     args.next();
 
     let path = args.next().unwrap();
 
-    let input = std::fs::read_to_string(path).expect("tried reading file");
+    let input = std::fs::read_to_string(path).unwrap();
 
     let mut input_lines = input.lines();
 
@@ -47,22 +49,34 @@ fn main() {
     for k in 0..number_of_nodes {
         for i in 0..number_of_nodes {
             for j in 0..number_of_nodes {
-                if matrix[i][k] != INF && matrix[k][j] != INF {
-                    matrix[i][j] = matrix[i][j].min(matrix[i][k] + matrix[k][j]);
+                unsafe {
+                    if *matrix[i].get_unchecked(k) != INF && *matrix[k].get_unchecked(j) != INF {
+                        *matrix[i].get_unchecked_mut(j) = (*matrix[i].get_unchecked(j))
+                            .min(matrix[i].get_unchecked(k) + matrix[k].get_unchecked(j));
+                    }
                 }
             }
         }
     }
 
+    let stdout = std::io::stdout();
+    let mut lock = stdout.lock();
+
     (0..number_of_nodes).for_each(|x| {
         let mut string = String::default();
         for y in 0..number_of_nodes {
-            let weight = matrix[x][y];
-            if weight != INF {
-                string.push_str(&format!("{y}w{weight} "));
+            unsafe {
+                let weight = *matrix[x].get_unchecked(y);
+                if weight != INF {
+                    string.push_str(&format!("{y}w{weight} "));
+                }
             }
         }
-        println!("{x} : {}", string.trim_end());
+        writeln!(lock, "{} : {}", x, string.trim_end()).unwrap();
         string.clear();
     });
+
+    drop(lock);
+
+    eprintln!("{:?}", now.elapsed());
 }
