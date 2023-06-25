@@ -1,5 +1,0 @@
-# negative Kantengewichte
-n = 3
-0 : 1w11 2w-3
-1 : 2w6
-2 : 1w-5 0w9

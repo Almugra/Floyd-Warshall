@@ -1,6 +1,0 @@
-# unerreichbare Knoten
-n = 4
-0 : 1w27 3w91
-1 : 2w36
-2 : 0w10
-3 : 3w29
